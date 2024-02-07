@@ -6,53 +6,56 @@ const Scatterplot = ({ data }) => {
 
     useEffect(() => {
         if (data) {
-            drawChart();
+
+            const width = 500;
+            const height = 400;
+    
+            const svg = d3
+                .select(svgRef.current)
+                .attr('width', width)
+                .attr('height', height);
+
+            const xPadding = 0.1; // Adjust the padding as needed
+            const yPadding = 0.1; // Adjust the padding as needed
+
+            const xExtent = d3.extent(data, d => d[0]);
+            const yExtent = d3.extent(data, d => d[1]);
+
+            const xRange = [0, width];
+            const yRange = [height, 0];
+
+            const xScale = d3
+                .scaleLinear()
+                .domain([
+                    xExtent[0] - (xExtent[1] - xExtent[0]) * xPadding,
+                    xExtent[1] + (xExtent[1] - xExtent[0]) * xPadding
+                ])
+                .range(xRange);
+
+            const yScale = d3
+                .scaleLinear()
+                .domain([
+                    yExtent[0] - (yExtent[1] - yExtent[0]) * yPadding,
+                    yExtent[1] + (yExtent[1] - yExtent[0]) * yPadding
+                ])
+                .range(yRange);
+            
+            svg
+                .selectAll('circle')
+                .data(data)
+                .enter()
+                .append('circle')
+                .attr('cx', d => xScale(d[0]))
+                .attr('cy', d => yScale(d[1]))
+                .attr('r', 3)
+                .attr('fill', 'steelblue');
+    
+            // Remove the axis elements
+            svg.selectAll('.axis').remove();
         }
     }, [data]);
 
-    const drawChart = () => {
-        const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-        const width = 500 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
-
-        const svg = d3
-            .select(svgRef.current)
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
-            .append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`);
-
-        const xScale = d3
-            .scaleLinear()
-            .domain([0, d3.max(data, d => d[0])])
-            .range([0, width]);
-
-        const yScale = d3
-            .scaleLinear()
-            .domain([0, d3.max(data, d => d[1])])
-            .range([height, 0]);
-
-        svg
-            .selectAll('circle')
-            .data(data)
-            .enter()
-            .append('circle')
-            .attr('cx', d => xScale(d[0]))
-            .attr('cy', d => yScale(d[1]))
-            .attr('r', 5)
-            .attr('fill', 'steelblue');
-
-        const xAxis = d3.axisBottom(xScale);
-        const yAxis = d3.axisLeft(yScale);
-
-        svg
-            .append('g')
-            .attr('transform', `translate(0,${height})`)
-            .call(xAxis);
-
-        svg.append('g').call(yAxis);
-    };
-
+    
     return <svg ref={svgRef}></svg>;
 };
 
