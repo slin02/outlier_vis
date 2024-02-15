@@ -4,11 +4,14 @@ import React, {useState, useEffect} from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 // import Barchart from './components/Barchart';
 import Scatterplot from './components/Scatterplot';
+import Outlierplot from './components/Outlierplot'
 
 
 function App() {
   const datasetList = ['breast_cancer_wisconsin_original_rp.json','cardiovascular_study_isomap.json', 'coil20_densmap.json'];
   const [selectedDataset, setSelectedDataset] = useState(null);
+  const algorithmList = ['Local Outlier Factor', 'K-means'];
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState(null);
 
   
   const handleFileUpload = (event) => {
@@ -35,12 +38,20 @@ function App() {
     document.getElementById('fileUpload').value = '';
   };
 
+  const handleAlgorithmChange = (event) => {
+    setSelectedAlgorithm(event.target.value);
+  }
+
 
   useEffect(() => {
     // Fetch the first dataset from the first option in the dropdown
     const datasetName = datasetList[0];
     const data = require(`./datasets/${datasetName}`);
     setSelectedDataset(data);
+
+    // Set the first algorithm from the dropdown
+    setSelectedAlgorithm(algorithmList[0]);
+
   }, []);
 
 
@@ -91,7 +102,22 @@ function App() {
             <Col>
               <h4>Output</h4>
               <div style={{ border: '1px solid black', display: 'inline-block', height:400, width:500}}>
+                <div id="tooltip" style={{position: 'absolute', visibility: 'hidden'}}></div>
+                <Outlierplot data={selectedDataset} algorithm={selectedAlgorithm}/>
               </div>
+              <br/>
+              <Form style={{width:400, display: 'inline-block'}}>
+                  <Form.Group controlId="algSelect">
+                    <Form.Label>Select Outlier Detection Algorithm</Form.Label>
+                    <Form.Select onChange={handleAlgorithmChange} >
+                      {algorithmList.map((algorithm, index) => (
+                        <option key={index} value={algorithm}>
+                          {algorithm}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Form>
             </Col>
           </Row>
       
