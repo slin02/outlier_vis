@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 
 const Scatterplot = ({ data }) => {
     const svgRef = useRef(null);
+    // console.log('d3', d3.version);
 
     useEffect(() => {
         if (data) {
@@ -47,8 +48,8 @@ const Scatterplot = ({ data }) => {
                 .append('circle')
                 .attr('cx', d => xScale(d[0]))
                 .attr('cy', d => yScale(d[1]))
-                .attr('r', 3)
-                .attr('fill', 'steelblue');
+                .attr('r', 1)
+                .attr('fill', 'black');
     
             // Remove the axis elements
             svg.selectAll('.axis').remove();

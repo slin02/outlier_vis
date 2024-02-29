@@ -17,7 +17,8 @@ const Outlierplot = ({ data, algorithm }) => {
                 outlierScores = lof(data);
             }
 
-            let colorScale = d3.scaleSequential().range([Math.min(outlierScores), Math.max(outlierScores)]).interpolator(d3.interpolateRgb.gamma(2.2)('red', 'blue'));
+            // let colorScale = d3.scaleSequential().range([Math.min(outlierScores), Math.max(outlierScores)]).interpolator(d3.interpolateRgb.gamma(2.2)('red', 'blue'));
+            
 
             const svg = d3
                 .select(svgRef.current)
@@ -48,6 +49,26 @@ const Outlierplot = ({ data, algorithm }) => {
 
             const tooltip = d3.select('#tooltip');
 
+            const densityData = d3.contourDensity()
+                .x(d => xScale(d[0]))
+                .y(d => yScale(d[1]))
+                .size([width, height])
+                .bandwidth(25)
+                .thresholds(20)
+                (data);
+            console.log("densityData", densityData);
+
+            var color = d3.scaleLinear()
+                .domain([densityData[0].value, densityData[densityData.length - 1].value])
+                .range(["white", "#3333e4"]);
+
+            svg.insert('g', 'g')
+                .selectAll('path')
+                .data(densityData)
+                .enter().append('path')
+                    .attr('d', d3.geoPath())
+                    .attr('fill', function(d) {return color(d.value);})
+
             svg
                 .selectAll('circle')
                 .data(data)
@@ -56,7 +77,7 @@ const Outlierplot = ({ data, algorithm }) => {
                 .attr('cx', d => xScale(d[0]))
                 .attr('cy', d => yScale(d[1]))
                 .attr('r', 3)
-                .attr('fill', (d, i) => colorScale(outlierScores[i]))
+                .attr('fill', ('black'))
                 .on('mouseover', function (event, d) {
                     // console.log("here");
                     const i = data.indexOf(d);
@@ -73,8 +94,8 @@ const Outlierplot = ({ data, algorithm }) => {
                     d3.select(this).attr('r', 3);
                     return tooltip.style('visibility', 'hidden');
                 });
-            
-            // Remove the axis elements
+
+                // Remove the axis elements
             svg.selectAll('.axis').remove();
         }
         
