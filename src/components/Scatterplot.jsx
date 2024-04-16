@@ -16,8 +16,8 @@ const Scatterplot = ({ data }) => {
                 .attr('width', width)
                 .attr('height', height);
 
-            const xPadding = 0.1; // Adjust the padding as needed
-            const yPadding = 0.1; // Adjust the padding as needed
+            const xPadding = 0.05; // Adjust the padding as needed
+            const yPadding = 0.05; // Adjust the padding as needed
 
             const xExtent = d3.extent(data, d => d[0]);
             const yExtent = d3.extent(data, d => d[1]);
@@ -28,7 +28,7 @@ const Scatterplot = ({ data }) => {
             const xScale = d3
                 .scaleLinear()
                 .domain([
-                    xExtent[0] - (xExtent[1] - xExtent[0]) * xPadding,
+                    xExtent[0] - (xExtent[1] - xExtent[0]) * 0.01,
                     xExtent[1] + (xExtent[1] - xExtent[0]) * xPadding
                 ])
                 .range(xRange);
@@ -36,7 +36,7 @@ const Scatterplot = ({ data }) => {
             const yScale = d3
                 .scaleLinear()
                 .domain([
-                    yExtent[0] - (yExtent[1] - yExtent[0]) * yPadding,
+                    yExtent[0] - (yExtent[1] - yExtent[0]) * 0.01,
                     yExtent[1] + (yExtent[1] - yExtent[0]) * yPadding
                 ])
                 .range(yRange);
@@ -48,7 +48,7 @@ const Scatterplot = ({ data }) => {
                 .append('circle')
                 .attr('cx', d => xScale(d[0]))
                 .attr('cy', d => yScale(d[1]))
-                .attr('r', 1)
+                .attr('r', 1.5)
                 .attr('fill', 'black');
     
             // Remove the axis elements
