@@ -14,10 +14,10 @@ var image = require('./images/' + currAlgorithm + '_' + currDataset + '.png');
 
 function App() {
   const datasetList = ['coil20_densmap', 'crowdsourced_mapping_umap', 'dermatology_isomap'];
-  const [selectedDataset, setSelectedDataset] = useState(null);
-  const [selectedDataName, setDataName] = useState(null);
+  const [selectedDataset, setSelectedDataset] = useState(`./datasets/coil20_densmap.json`);
+  const [selectedDataName, setDataName] = useState('coil20_densmap');
   const algorithmList = ['CBLOF', 'ABOD', 'COPOD', 'DBSCAN', 'ECOD', 'FB', 'GMM', 'HBOS', 'IF', 'INNE', 'KDE', 'KNN', 'LMDD', 'LOF', 'LSCP', 'MCD', 'OCSVM', 'PCA'];
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState(null);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState('CBLOF');
   
   
   
